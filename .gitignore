@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
+config.php
+database.php
+
+# Dependencies (si usas Composer)
+vendor/
+
+# IDEs / Editors
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.swp
+
+# Uploads (si tu sistema guarda archivos)
+uploads/
+files/
+
+# SQL backups / dumps
+*.bak
+*.sql
+
+# Cache
+cache/
