@@ -412,21 +412,34 @@ function buscarEtiqueta(etiqueta) {
 }
 
 // ══ CREATE ════════════════════════════════════════════════════
-function abrirModalNuevo() {
+async function abrirModalNuevo() {
   document.getElementById('modalFormTitulo').textContent = '➕ Nuevo Equipo';
-  document.getElementById('formId').value          = '';
-  document.getElementById('formEtiqueta').value    = '';
-  document.getElementById('formMarca').value       = '';
-  document.getElementById('formModelo').value      = '';
-  document.getElementById('formSerial').value      = '';
-  document.getElementById('formAntiguedad').value  = '';
-  document.getElementById('formComentario').value  = '';
-  document.getElementById('formUbicacion').value   = '';
-  document.getElementById('formEstado').value      = '';
+  document.getElementById('formId').value            = '';
+  document.getElementById('formMarca').value         = '';
+  document.getElementById('formModelo').value        = '';
+  document.getElementById('formSerial').value        = '';
+  document.getElementById('formAntiguedad').value    = '';
+  document.getElementById('formComentario').value    = '';
+  document.getElementById('formUbicacion').value     = '';
+  document.getElementById('formEstado').value        = '';
   document.getElementById('formRegistradoPor').value = '';
-  // Poblar combobox de usuario desde USUARIOS_TPU (sin preselección)
+  limpiarErrorSerial();
   poblarSelectUsuario('formUsuario', '');
-  // Modo nuevo: sin tabs, con registrado_por (igual que en edición)
+
+  // Etiqueta: auto-correlativo, no editable en modo nuevo
+  const etiquetaInput = document.getElementById('formEtiqueta');
+  const etiquetaHint  = document.getElementById('formEtiquetaHint');
+  etiquetaInput.value    = 'Generando...';
+  etiquetaInput.readOnly = true;
+  etiquetaHint.style.display = 'inline';
+  try {
+    const res  = await fetch('get_next_etiqueta.php');
+    const data = await res.json();
+    etiquetaInput.value = data.ok ? data.etiqueta : '';
+  } catch (e) {
+    etiquetaInput.value = '';
+  }
+
   document.getElementById('modalTabs').style.display          = 'none';
   document.getElementById('mpane-datos').style.display        = 'flex';
   document.getElementById('mpane-trazabilidad').style.display = 'none';
@@ -438,7 +451,12 @@ function abrirModalNuevo() {
 function abrirModalEditar(e) {
   document.getElementById('modalFormTitulo').textContent = '✏️ Editar Equipo';
   document.getElementById('formId').value          = e.id;
-  document.getElementById('formEtiqueta').value    = e.etiqueta      || '';
+  // En edición la etiqueta es editable (correcciones) y sin hint
+  const etiquetaInput = document.getElementById('formEtiqueta');
+  etiquetaInput.value    = e.etiqueta || '';
+  etiquetaInput.readOnly = false;
+  document.getElementById('formEtiquetaHint').style.display = 'none';
+  limpiarErrorSerial();
   document.getElementById('formMarca').value       = (e.marca||'').trim();
   document.getElementById('formModelo').value      = e.modelo        || '';
   document.getElementById('formSerial').value      = e.serial_number || '';
@@ -463,6 +481,42 @@ function abrirModalEditar(e) {
   abrirModal('modalForm');
 }
 
+// ── Validación en tiempo real del número de serie ─────────────
+let _serialError = false;
+
+function limpiarErrorSerial() {
+  _serialError = false;
+  const el = document.getElementById('formSerialError');
+  const inp = document.getElementById('formSerial');
+  if (el)  { el.style.display = 'none'; el.textContent = ''; }
+  if (inp) inp.classList.remove('input-error');
+}
+
+async function verificarSerial() {
+  const inp = document.getElementById('formSerial');
+  const el  = document.getElementById('formSerialError');
+  const serial = inp.value.trim();
+  const id     = document.getElementById('formId').value;
+
+  if (!serial) { limpiarErrorSerial(); return; }
+
+  const params = new URLSearchParams({ serial });
+  if (id) params.append('exclude_id', id);
+
+  try {
+    const res  = await fetch(`check_serial.php?${params}`);
+    const data = await res.json();
+    if (data.ok && data.existe) {
+      _serialError = true;
+      inp.classList.add('input-error');
+      el.textContent  = `⚠ N° de serie ya registrado en: ${data.equipo.etiqueta} — ${data.equipo.modelo}`;
+      el.style.display = 'inline';
+    } else {
+      limpiarErrorSerial();
+    }
+  } catch (_) { /* si falla la red, el backend igual lo valida */ }
+}
+
 async function guardarEquipo() {
   const id            = document.getElementById('formId').value;
   const etiqueta      = document.getElementById('formEtiqueta').value.trim();
@@ -478,6 +532,7 @@ async function guardarEquipo() {
 
   if (!antiguedad) { showToast('La fecha de compra es obligatoria.', 'error'); return; }
   if (!registradoPor) { showToast('Debes seleccionar quién registra el cambio.', 'error'); return; }
+  if (_serialError) { showToast('El número de serie ya existe en otro equipo.', 'error'); document.getElementById('formSerial').focus(); return; }
 
   const btn = document.getElementById('btnGuardar');
   btn.disabled = true; btn.textContent = 'Guardando...';

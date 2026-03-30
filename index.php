@@ -324,6 +324,7 @@
             <div class="form-group">
               <label>Etiqueta</label>
               <input type="text" id="formEtiqueta" placeholder="SBPV1001">
+              <span id="formEtiquetaHint" style="display:none;font-size:11px;color:var(--sb-text-light);">Generado automáticamente</span>
             </div>
             <div class="form-group">
               <label>Usuario</label>
@@ -350,7 +351,8 @@
             </div>
             <div class="form-group full">
               <label>Número de Serie</label>
-              <input type="text" id="formSerial" placeholder="SAN0CV05K334420">
+              <input type="text" id="formSerial" placeholder="SAN0CV05K334420" oninput="limpiarErrorSerial()" onblur="verificarSerial()">
+              <span id="formSerialError" style="display:none;font-size:11px;color:#a94442;"></span>
             </div>
             <div class="form-group full">
               <label>Comentario</label>

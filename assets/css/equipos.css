@@ -303,6 +303,15 @@ td:last-child                   { text-align: center; white-space: nowrap; }
   box-shadow: 0 0 0 3px rgba(6,156,149,0.15);
 }
 .form-group textarea   { resize: vertical; min-height: 60px; }
+.form-group input[readonly] {
+  background: var(--sb-secondary-light);
+  color: var(--sb-text-light);
+  cursor: not-allowed;
+}
+.input-error {
+  border-color: #a94442 !important;
+  box-shadow: 0 0 0 3px rgba(169,68,66,0.15) !important;
+}
 
 .modal-footer {
   padding: 14px 22px;
