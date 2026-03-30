@@ -1431,6 +1431,17 @@ tr.row-baja:hover td {
 /* Modal más ancho para edición con trazabilidad */
 .modal-wide { max-width: 620px; }
 
+/* Panes del modal (datos / trazabilidad) deben ser flex para que
+   el modal-body scrollee y el modal-footer quede fijo abajo */
+#mpane-datos,
+#mpane-trazabilidad {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Tabs del modal */
 .modal-tabs {
   display: flex;

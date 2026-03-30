@@ -415,6 +415,7 @@ function buscarEtiqueta(etiqueta) {
 function abrirModalNuevo() {
   document.getElementById('modalFormTitulo').textContent = '➕ Nuevo Equipo';
   document.getElementById('formId').value          = '';
+  document.getElementById('formEtiqueta').value    = '';
   document.getElementById('formMarca').value       = '';
   document.getElementById('formModelo').value      = '';
   document.getElementById('formSerial').value      = '';
@@ -422,13 +423,14 @@ function abrirModalNuevo() {
   document.getElementById('formComentario').value  = '';
   document.getElementById('formUbicacion').value   = '';
   document.getElementById('formEstado').value      = '';
+  document.getElementById('formRegistradoPor').value = '';
   // Poblar combobox de usuario desde USUARIOS_TPU (sin preselección)
   poblarSelectUsuario('formUsuario', '');
-  // Modo nuevo: sin tabs, sin registrado_por
+  // Modo nuevo: sin tabs, con registrado_por (igual que en edición)
   document.getElementById('modalTabs').style.display          = 'none';
-  document.getElementById('mpane-datos').style.display        = 'block';
+  document.getElementById('mpane-datos').style.display        = 'flex';
   document.getElementById('mpane-trazabilidad').style.display = 'none';
-  document.getElementById('wrapRegistradoPor').style.display  = 'none';
+  document.getElementById('wrapRegistradoPor').style.display  = 'block';
   abrirModal('modalForm');
 }
 
@@ -475,7 +477,7 @@ async function guardarEquipo() {
   const registradoPor = document.getElementById('formRegistradoPor')?.value.trim() || '';
 
   if (!antiguedad) { showToast('La fecha de compra es obligatoria.', 'error'); return; }
-  if (id && !registradoPor) { showToast('Debes seleccionar quién registra el cambio.', 'error'); return; }
+  if (!registradoPor) { showToast('Debes seleccionar quién registra el cambio.', 'error'); return; }
 
   const btn = document.getElementById('btnGuardar');
   btn.disabled = true; btn.textContent = 'Guardando...';
@@ -869,7 +871,7 @@ function renderTrazabilidadHTML(cont, eventos, total) {
 function cambiarModalTab(tab) {
   ['datos','trazabilidad'].forEach(t => {
     document.getElementById(`mtab-${t}`)?.classList.toggle('active', t === tab);
-    document.getElementById(`mpane-${t}`).style.display = t === tab ? 'block' : 'none';
+    document.getElementById(`mpane-${t}`).style.display = t === tab ? 'flex' : 'none';
   });
   if (tab === 'trazabilidad') {
     const id = document.getElementById('formId').value;
