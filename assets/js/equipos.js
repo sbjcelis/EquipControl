@@ -1571,27 +1571,6 @@ function abrirModalReporteUsuarios() {
     };
   });
 
-  // Calcular KPIs totales
-  const totalUsuarios = _reporteRows.length;
-  const totalNuevos = _reporteRows.reduce((sum, r) => sum + r.nuevos, 0);
-  const totalUsados = _reporteRows.reduce((sum, r) => sum + r.usados, 0);
-
-  // Renderizar KPI bar
-  const kpisEl = document.getElementById('reporteKpis');
-  kpisEl.innerHTML = `
-    <div class="reporte-kpi-card">
-      <div class="reporte-kpi-card-num">${totalUsuarios}</div>
-      <div class="reporte-kpi-card-lbl">Total Usuarios</div>
-    </div>
-    <div class="reporte-kpi-card">
-      <div class="reporte-kpi-card-num" style="color:#057F79">📦 ${totalNuevos}</div>
-      <div class="reporte-kpi-card-lbl">Equipos Nuevos</div>
-    </div>
-    <div class="reporte-kpi-card">
-      <div class="reporte-kpi-card-num" style="color:#8a6d3b">🔄 ${totalUsados}</div>
-      <div class="reporte-kpi-card-lbl">Equipos Usados</div>
-    </div>
-  `;
 
   // Limpiar filtro
   document.getElementById('reporteFiltro').value = '';

@@ -1868,14 +1868,6 @@ tbody td:nth-child(10) { width: 130px; text-align: center; vertical-align: middl
 /* ─── Modal Reporte Usuarios ────────────────────────────────── */
 .modal-reporte { max-width: 900px; }
 
-.reporte-kpi-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--sb-border);
-}
-
 .reporte-kpi-card {
   flex: 1;
   padding: 12px;
@@ -1898,7 +1890,7 @@ tbody td:nth-child(10) { width: 130px; text-align: center; vertical-align: middl
 }
 
 .reporte-filtro {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .reporte-filtro input {
