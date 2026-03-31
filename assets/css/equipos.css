@@ -1944,7 +1944,8 @@ tbody td:nth-child(10) { width: 130px; text-align: center; vertical-align: middl
   padding: 10px 12px;
   text-align: left;
   font-weight: 600;
-  color: var(--sb-text);
+  color: var(--sb-white);
+  background: var(--sb-primary);
   border-bottom: 1px solid var(--sb-border);
 }
 
