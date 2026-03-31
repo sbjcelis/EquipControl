@@ -1647,3 +1647,107 @@ function filtrarReporteUsuarios(texto) {
 
   renderReporteTbody(filasFiltradas);
 }
+
+function copiarReporteAlPortapapeles() {
+  // Obtener datos visibles en la tabla (filtrados)
+  const filtro = document.getElementById('reporteFiltro').value.toLowerCase().trim();
+  let filas = _reporteRows;
+  if (filtro) {
+    filas = _reporteRows.filter(r => r.login.toLowerCase().includes(filtro));
+  }
+
+  // Construir tabla de texto tabulado
+  const lineas = [];
+
+  // Encabezado
+  lineas.push(['Usuario', 'Equipo actual', 'Total equipos', 'Nuevos', 'Usados'].join('\t'));
+
+  // Datos
+  filas.forEach(row => {
+    let equipoActualStr = '—';
+    if (row.equipoActual.length > 0) {
+      const eq = row.equipoActual[0];
+      equipoActualStr = `${eq.etiqueta || ''} ${(eq.marca || '').trim()} ${eq.modelo || ''}`.trim();
+    }
+
+    const fila = [
+      row.login,
+      equipoActualStr,
+      row.total,
+      row.nuevos || '—',
+      row.usados || '—'
+    ];
+    lineas.push(fila.join('\t'));
+  });
+
+  const texto = lineas.join('\n');
+
+  // Copiar al portapapeles
+  navigator.clipboard.writeText(texto).then(() => {
+    showToast(`✓ ${filas.length} fila(s) copiada(s) al portapapeles`, 'success');
+  }).catch(err => {
+    showToast('Error al copiar: ' + err.message, 'error');
+  });
+}
+
+function exportarReporteExcel() {
+  // Obtener datos visibles en la tabla (filtrados)
+  const filtro = document.getElementById('reporteFiltro').value.toLowerCase().trim();
+  let filas = _reporteRows;
+  if (filtro) {
+    filas = _reporteRows.filter(r => r.login.toLowerCase().includes(filtro));
+  }
+
+  // Construir CSV
+  const csv = [];
+
+  // Encabezado
+  csv.push(['Usuario', 'Equipo actual', 'Total equipos', 'Nuevos', 'Usados'].map(escaparCSV).join(','));
+
+  // Datos
+  filas.forEach(row => {
+    let equipoActualStr = '—';
+    if (row.equipoActual.length > 0) {
+      const eq = row.equipoActual[0];
+      equipoActualStr = `${eq.etiqueta || ''} ${(eq.marca || '').trim()} ${eq.modelo || ''}`.trim();
+    }
+
+    const fila = [
+      row.login,
+      equipoActualStr,
+      row.total,
+      row.nuevos || '—',
+      row.usados || '—'
+    ];
+    csv.push(fila.map(escaparCSV).join(','));
+  });
+
+  const contenido = csv.join('\n');
+
+  // Crear blob con BOM UTF-8 para que Excel lo reconozca correctamente
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + contenido], { type: 'text/csv;charset=utf-8;' });
+
+  // Descargar
+  const enlace = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  enlace.setAttribute('href', url);
+  enlace.setAttribute('download', `reporte-usuarios-${new Date().toISOString().split('T')[0]}.csv`);
+  enlace.style.visibility = 'hidden';
+
+  document.body.appendChild(enlace);
+  enlace.click();
+  document.body.removeChild(enlace);
+
+  showToast(`✓ Reporte exportado (${filas.length} fila(s))`, 'success');
+}
+
+// Helper para escapar valores CSV
+function escaparCSV(valor) {
+  const str = String(valor || '');
+  // Si contiene coma, comillas o saltos de línea, envolver en comillas
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}

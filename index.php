@@ -562,6 +562,10 @@
         </div>
       </div>
       <div class="modal-footer">
+        <div style="display:flex;gap:8px;margin-right:auto;">
+          <button class="btn btn-accent btn-sm" onclick="copiarReporteAlPortapapeles()">📋 Copiar tabla</button>
+          <button class="btn btn-primary btn-sm" onclick="exportarReporteExcel()">⬇ Exportar Excel</button>
+        </div>
         <button class="btn btn-outline" onclick="cerrarModal('modalReporteUsuarios')">Cerrar</button>
       </div>
     </div>
