@@ -11,6 +11,7 @@ let sortCol          = 'antiguedad';
 let sortAsc          = true;
 let eliminarId       = null;
 let toastTimer       = null;
+let _reporteRows     = [];   // para filtrado del reporte
 
 const marcaIconos = {
   'HP':'🔵','DELL':'🔷','ASUS':'🟣','ACER':'🟢','Samsung':'🔶'
@@ -1540,4 +1541,109 @@ function renderDashboard(d) {
       </div>
     </div>` : ''}
   `;
+}
+
+// ══ REPORTE DE USUARIOS ════════════════════════════════════════
+function abrirModalReporteUsuarios() {
+  // Combinar usuarios de BD + Excel
+  const usuariosBD = [...new Set(
+    todosEquipos.map(e => (e.usuario || '').trim().toLowerCase()).filter(Boolean)
+  )];
+  const usuariosExcel = Object.keys(historialExcel);
+  const todosUsuariosComb = [...new Set([...usuariosBD, ...usuariosExcel])].sort();
+
+  // Construir datos para cada usuario
+  _reporteRows = todosUsuariosComb.map(login => {
+    const equipoActual = todosEquipos.filter(e => (e.usuario || '').trim().toLowerCase() === login);
+    const historial = historialExcel[login] || [];
+
+    const nuevos = historial.filter(h => h.tipo === 'N').length;
+    const usados = historial.filter(h => h.tipo === 'U').length;
+    const total = historial.length || equipoActual.length;
+
+    return {
+      login,
+      equipoActual,
+      historial,
+      nuevos,
+      usados,
+      total
+    };
+  });
+
+  // Calcular KPIs totales
+  const totalUsuarios = _reporteRows.length;
+  const totalNuevos = _reporteRows.reduce((sum, r) => sum + r.nuevos, 0);
+  const totalUsados = _reporteRows.reduce((sum, r) => sum + r.usados, 0);
+
+  // Renderizar KPI bar
+  const kpisEl = document.getElementById('reporteKpis');
+  kpisEl.innerHTML = `
+    <div class="reporte-kpi-card">
+      <div class="reporte-kpi-card-num">${totalUsuarios}</div>
+      <div class="reporte-kpi-card-lbl">Total Usuarios</div>
+    </div>
+    <div class="reporte-kpi-card">
+      <div class="reporte-kpi-card-num" style="color:#057F79">📦 ${totalNuevos}</div>
+      <div class="reporte-kpi-card-lbl">Equipos Nuevos</div>
+    </div>
+    <div class="reporte-kpi-card">
+      <div class="reporte-kpi-card-num" style="color:#8a6d3b">🔄 ${totalUsados}</div>
+      <div class="reporte-kpi-card-lbl">Equipos Usados</div>
+    </div>
+  `;
+
+  // Limpiar filtro
+  document.getElementById('reporteFiltro').value = '';
+
+  // Renderizar tabla
+  renderReporteTbody(_reporteRows);
+
+  // Abrir modal
+  abrirModal('modalReporteUsuarios');
+}
+
+function renderReporteTbody(filas) {
+  const tbody = document.getElementById('reporteTbody');
+
+  if (filas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--sb-text-light);">Sin datos</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filas.map(row => {
+    // Equipo actual
+    let equipoActualStr = '—';
+    if (row.equipoActual.length > 0) {
+      const eq = row.equipoActual[0];
+      equipoActualStr = `${esc(eq.etiqueta || '')} ${esc((eq.marca || '').trim())} ${esc(eq.modelo || '')}`.trim();
+    }
+
+    // Badges Nuevos/Usados
+    const nuevosBadge = row.nuevos > 0
+      ? `<span class="badge-nuevo">${row.nuevos}</span>`
+      : '—';
+    const usadosBadge = row.usados > 0
+      ? `<span class="badge-usado">${row.usados}</span>`
+      : '—';
+
+    return `<tr>
+      <td>${esc(row.login)}</td>
+      <td style="font-size:12px;color:var(--sb-text-light);">${esc(equipoActualStr)}</td>
+      <td style="text-align:center;">${row.total}</td>
+      <td style="text-align:center;">${nuevosBadge}</td>
+      <td style="text-align:center;">${usadosBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrarReporteUsuarios(texto) {
+  const filtro = texto.toLowerCase().trim();
+
+  let filasFiltradas = _reporteRows;
+  if (filtro) {
+    filasFiltradas = _reporteRows.filter(r => r.login.toLowerCase().includes(filtro));
+  }
+
+  renderReporteTbody(filasFiltradas);
 }

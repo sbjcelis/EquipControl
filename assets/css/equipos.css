@@ -1864,3 +1864,131 @@ tbody td:nth-child(10) { width: 130px; text-align: center; vertical-align: middl
   color: var(--sb-text-light);
   text-align: center;
 }
+
+/* ─── Modal Reporte Usuarios ────────────────────────────────── */
+.modal-reporte { max-width: 900px; }
+
+.reporte-kpi-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--sb-border);
+}
+
+.reporte-kpi-card {
+  flex: 1;
+  padding: 12px;
+  background: var(--sb-secondary-light);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.reporte-kpi-card-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--sb-primary);
+  margin-bottom: 4px;
+}
+
+.reporte-kpi-card-lbl {
+  font-size: 11px;
+  color: var(--sb-text-light);
+  font-weight: 500;
+}
+
+.reporte-filtro {
+  margin-bottom: 16px;
+}
+
+.reporte-filtro input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--sb-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.reporte-filtro input::placeholder {
+  color: var(--sb-text-light);
+}
+
+.reporte-filtro input:focus {
+  outline: none;
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px rgba(6, 156, 149, 0.1);
+}
+
+.reporte-tabla-wrap {
+  overflow-y: auto;
+  max-height: 420px;
+  border: 1px solid var(--sb-border);
+  border-radius: 6px;
+}
+
+.reporte-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.reporte-tabla thead {
+  background: var(--sb-secondary-light);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.reporte-tabla th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--sb-text);
+  border-bottom: 1px solid var(--sb-border);
+}
+
+.reporte-tabla th.col-center {
+  text-align: center;
+}
+
+.reporte-tabla td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--sb-border);
+  vertical-align: middle;
+}
+
+.reporte-tabla tbody tr:hover {
+  background: var(--sb-secondary-light);
+}
+
+.reporte-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-nuevo {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--badge-green-bg);
+  color: var(--badge-green-txt);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.badge-usado {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--badge-orange-bg);
+  color: var(--badge-orange-txt);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.reporte-vacio {
+  padding: 20px;
+  text-align: center;
+  color: var(--sb-text-light);
+  font-size: 13px;
+}

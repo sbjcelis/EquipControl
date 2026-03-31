@@ -29,6 +29,7 @@
     <div class="dash-top-label">
       <span class="section-eyebrow">📊 Resumen ejecutivo</span>
       <div style="display:flex;gap:8px;">
+        <button class="btn-tracking-user" onclick="abrirModalReporteUsuarios()">📊 Reporte usuarios</button>
         <button class="btn-tracking-user" onclick="abrirModalTrackingUsuario()">👤 Tracking usuario</button>
         <button class="dash-refresh-btn" onclick="cargarEquipos()">↻ Actualizar</button>
       </div>
@@ -526,6 +527,42 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="cerrarModal('modalTrackingUsuario')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL REPORTE USUARIOS ═════════════════════════════════ -->
+  <div class="modal-overlay" id="modalReporteUsuarios">
+    <div class="modal modal-reporte">
+      <div class="modal-header">
+        <h2>📊 Reporte de Usuarios — Equipos Nuevos y Usados</h2>
+        <button class="modal-close" onclick="cerrarModal('modalReporteUsuarios')">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- KPI bar -->
+        <div id="reporteKpis" class="reporte-kpi-bar"></div>
+        <!-- Filtro -->
+        <div class="reporte-filtro">
+          <input type="text" id="reporteFiltro" placeholder="🔍 Filtrar por usuario..." oninput="filtrarReporteUsuarios(this.value)">
+        </div>
+        <!-- Tabla -->
+        <div class="reporte-tabla-wrap">
+          <table class="reporte-tabla">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Equipo actual</th>
+                <th class="col-center">Total equipos</th>
+                <th class="col-center">📦 Nuevos</th>
+                <th class="col-center">🔄 Usados</th>
+              </tr>
+            </thead>
+            <tbody id="reporteTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="cerrarModal('modalReporteUsuarios')">Cerrar</button>
       </div>
     </div>
   </div>
