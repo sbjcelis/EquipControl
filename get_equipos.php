@@ -56,7 +56,8 @@ $sql = "
         ubicacion,
         estado,
         CONVERT(VARCHAR(10), fecha_baja, 103) AS fecha_baja,
-        motivo_baja
+        motivo_baja,
+        comprobante_path
     FROM dbo.equipos_computacionales
     ORDER BY antiguedad ASC, id ASC
 ";
@@ -119,6 +120,7 @@ while ($row = odbc_fetch_array($result)) {
         'estado'      => isset($row['estado'])      ? limpiar_utf8($row['estado'])      : '',
         'fecha_baja'  => isset($row['fecha_baja'])  ? limpiar_utf8($row['fecha_baja'])  : '',
         'motivo_baja' => isset($row['motivo_baja']) ? limpiar_utf8($row['motivo_baja']) : '',
+        'comprobante_path' => isset($row['comprobante_path']) ? limpiar_utf8($row['comprobante_path']) : '',
     );
 }
 

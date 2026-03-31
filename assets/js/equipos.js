@@ -164,7 +164,10 @@ function renderDashboardPrincipal() {
     if (!ubiMap[u]) ubiMap[u] = 0;
     ubiMap[u]++;
   });
-  const ubiEntries = Object.entries(ubiMap).sort((a,b) => b[1]-a[1]);
+  const ubicacionesValidas = ['Santiago', 'Puerto Varas', 'Puerto Natales'];
+  const ubiEntries = Object.entries(ubiMap)
+    .filter(([loc, _]) => ubicacionesValidas.includes(loc))
+    .sort((a,b) => b[1]-a[1]);
   const maxUbi     = Math.max(...ubiEntries.map(x => x[1]), 1);
 
   const ubiIcons = {
@@ -440,6 +443,10 @@ async function abrirModalNuevo() {
     etiquetaInput.value = '';
   }
 
+  // Limpiar comprobante
+  document.getElementById('formComprobante').value = '';
+  document.getElementById('comprobanteActualWrap').style.display = 'none';
+
   document.getElementById('modalTabs').style.display          = 'none';
   document.getElementById('mpane-datos').style.display        = 'flex';
   document.getElementById('mpane-trazabilidad').style.display = 'none';
@@ -474,6 +481,17 @@ function abrirModalEditar(e) {
   } else {
     document.getElementById('formAntiguedad').value = fraw;
   }
+
+  // Limpiar comprobante y mostrar el actual si existe
+  document.getElementById('formComprobante').value = '';
+  const comprobanteWrap = document.getElementById('comprobanteActualWrap');
+  if (e.comprobante_path && e.comprobante_path.trim()) {
+    comprobanteWrap.style.display = 'block';
+    document.getElementById('linkComprobanteActual').href = e.comprobante_path;
+  } else {
+    comprobanteWrap.style.display = 'none';
+  }
+
   // Modo edición: mostrar tabs y registrado_por
   document.getElementById('modalTabs').style.display         = 'flex';
   document.getElementById('wrapRegistradoPor').style.display = 'block';
@@ -551,6 +569,31 @@ async function guardarEquipo() {
     const data = await res.json();
 
     if (data.ok) {
+      // Equipo guardado correctamente
+      const equipoId = data.id || parseInt(id);
+
+      // Subir comprobante si hay archivo seleccionado
+      const fileInput = document.getElementById('formComprobante');
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        const formData = new FormData();
+        formData.append('equipo_id', equipoId);
+        formData.append('file', fileInput.files[0]);
+
+        try {
+          const resUpload = await fetch('upload_comprobante.php', {
+            method: 'POST',
+            body: formData
+          });
+          const dataUpload = await resUpload.json();
+
+          if (!dataUpload.ok) {
+            showToast(`Equipo guardado, pero hubo problema al subir comprobante: ${dataUpload.msg}`, 'warning');
+          }
+        } catch (uploadErr) {
+          showToast(`Equipo guardado, pero error al subir comprobante: ${uploadErr.message}`, 'warning');
+        }
+      }
+
       cerrarModal('modalForm');
       showToast(data.msg, 'success');
       await cargarEquipos();
@@ -721,8 +764,9 @@ function renderTabla(lista) {
     const badge    = getBadge(anios);
     const icono    = marcaIconos[(e.marca||'').trim()] || '💻';
     const esBaja   = e.estado === 'Dado de baja';
+    const tieneComprobante = e.comprobante_path && e.comprobante_path.trim() !== '';
     const etiqueta = e.etiqueta
-      ? `<span class="etiqueta-tag">${esc(e.etiqueta)}</span>`
+      ? `<span class="etiqueta-tag">${esc(e.etiqueta)}${tieneComprobante ? ' 📎' : ''}</span>`
       : `<span class="etiqueta-null">— sin etiqueta</span>`;
 
     return `<tr class="${esBaja ? 'row-baja' : ''}">

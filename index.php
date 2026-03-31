@@ -388,6 +388,18 @@
                 <option value="Juan Felipe Celis">Juan Felipe Celis</option>
               </select>
             </div>
+            <!-- Comprobante de compra -->
+            <div class="form-group full" id="wrapComprobante">
+              <label>Comprobante de compra</label>
+              <div class="upload-area">
+                <input type="file" id="formComprobante" accept=".pdf,.jpg,.jpeg,.png">
+                <span class="upload-hint">PDF, JPG o PNG • máx. 10 MB (opcional)</span>
+              </div>
+              <div id="comprobanteActualWrap" style="display:none;margin-top:8px;">
+                <a id="linkComprobanteActual" href="#" target="_blank" style="color:var(--sb-accent);text-decoration:none;font-size:13px;font-weight:500;">📎 Ver comprobante actual</a>
+                <span style="color:var(--sb-text-light);font-size:11px;margin-left:4px;">— o selecciona uno nuevo para reemplazarlo</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

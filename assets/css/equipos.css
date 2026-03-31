@@ -1830,3 +1830,37 @@ tbody td:nth-child(10) { width: 130px; text-align: center; vertical-align: middl
 .excel-usado .tracking-excel-tipo  { color: #8a6d3b; }
 .excel-otro   { background: var(--sb-secondary); }
 .excel-otro .tracking-excel-tipo   { color: var(--sb-text-light); }
+
+/* ─── Upload de comprobante ─────────────────────────────────── */
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border: 2px dashed var(--sb-border);
+  border-radius: 6px;
+  background: var(--sb-secondary-light);
+  transition: all 0.2s ease;
+}
+.upload-area:hover {
+  border-color: var(--sb-accent);
+  background: #f5f9f8;
+}
+.upload-area input[type="file"] {
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid var(--sb-border);
+  border-radius: 4px;
+  background: var(--sb-white);
+  transition: all 0.2s ease;
+}
+.upload-area input[type="file"]:hover {
+  border-color: var(--sb-accent);
+}
+.upload-hint {
+  font-size: 11px;
+  color: var(--sb-text-light);
+  text-align: center;
+}
