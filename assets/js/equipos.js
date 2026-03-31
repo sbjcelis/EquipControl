@@ -766,7 +766,7 @@ function renderTabla(lista) {
     const esBaja   = e.estado === 'Dado de baja';
     const tieneComprobante = e.comprobante_path && e.comprobante_path.trim() !== '';
     const etiqueta = e.etiqueta
-      ? `${tieneComprobante ? '<span style="margin-right:6px;font-size:14px;">📄</span>' : ''}<span class="etiqueta-tag">${esc(e.etiqueta)}</span>`
+      ? `<span class="etiqueta-tag">${esc(e.etiqueta)}</span>${tieneComprobante ? '<span style="margin-left:6px;font-size:14px;">📄</span>' : ''}`
       : `<span class="etiqueta-null">— sin etiqueta</span>`;
 
     return `<tr class="${esBaja ? 'row-baja' : ''}">
