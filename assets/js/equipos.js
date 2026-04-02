@@ -43,6 +43,12 @@ function poblarSelectUsuario(selectId, loginActual = '') {
   // Limpiar opciones previas manteniendo solo la primera (placeholder)
   while (sel.options.length > 1) sel.remove(1);
 
+  // Agregar opción "Sin asignar"
+  const optSinAsignar = document.createElement('option');
+  optSinAsignar.value = '';
+  optSinAsignar.textContent = '— Sin asignar —';
+  sel.appendChild(optSinAsignar);
+
   todosUsuarios.forEach(u => {
     const opt       = document.createElement('option');
     opt.value       = u.login;
@@ -62,6 +68,11 @@ function poblarSelectUsuario(selectId, loginActual = '') {
     opt.selected    = true;
     opt.style.color = '#a94442';
     sel.insertBefore(opt, sel.options[1]);
+  }
+
+  // Si loginActual está vacío, seleccionar "Sin asignar"
+  if (!loginActual) {
+    optSinAsignar.selected = true;
   }
 }
 
