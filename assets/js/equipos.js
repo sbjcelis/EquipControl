@@ -1353,7 +1353,6 @@ function prepararFormNueva() {
   document.getElementById('mantDescripcion').value    = '';
   document.getElementById('mantTecnico').value        = '';
   document.getElementById('mantEstado').value         = 'Completada';
-  document.getElementById('mantProxima').value        = '';
 }
 
 function editarMantencion(id) {
@@ -1376,7 +1375,6 @@ function editarMantencion(id) {
   document.getElementById('mantDescripcion').value = m.descripcion || '';
   document.getElementById('mantTecnico').value     = m.tecnico     || '';
   document.getElementById('mantEstado').value      = m.estado      || 'Completada';
-  document.getElementById('mantProxima').value     = toInput(m.proxima_revision);
 }
 
 async function guardarMantencion() {
@@ -1387,7 +1385,6 @@ async function guardarMantencion() {
   const desc     = document.getElementById('mantDescripcion').value.trim();
   const tecnico  = document.getElementById('mantTecnico').value.trim();
   const estado   = document.getElementById('mantEstado').value;
-  const proxima  = document.getElementById('mantProxima').value;
 
   if (!fecha || !tipo) { showToast('Fecha y tipo son obligatorios.', 'error'); return; }
 
@@ -1397,8 +1394,7 @@ async function guardarMantencion() {
   try {
     const payload = {
       equipo_id: equipoActivo.id,
-      fecha, tipo, descripcion: desc, tecnico, estado,
-      proxima_revision: proxima
+      fecha, tipo, descripcion: desc, tecnico, estado
     };
     if (editandoMantId) payload.id = editandoMantId;
 

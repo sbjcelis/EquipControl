@@ -283,12 +283,6 @@
               <textarea id="mantDescripcion" placeholder="¿Qué se hizo?" rows="3"></textarea>
             </div>
           </div>
-          <div class="form-row single">
-            <div class="form-group">
-              <label>Próxima revisión</label>
-              <input type="date" id="mantProxima">
-            </div>
-          </div>
           <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
             <button class="btn btn-outline" onclick="cambiarTab('historial')">Cancelar</button>
             <button class="btn btn-primary" id="btnGuardarMant" onclick="guardarMantencion()">💾 Guardar</button>
