@@ -1529,24 +1529,6 @@ function renderDashboard(d) {
           </div>`).join('')}
       </div>
     </div>
-
-    <!-- Próximas revisiones -->
-    ${d.proximas_revisiones.length > 0 ? `
-    <div class="dash-section">
-      <h4>⏰ Próximas revisiones (60 días)</h4>
-      <div class="revision-list">
-        ${d.proximas_revisiones.map(x => {
-          const cls = x.dias_restantes <= 7 ? 'urgent' : x.dias_restantes <= 20 ? 'warning' : '';
-          return `<div class="revision-item">
-            <div class="revision-days ${cls}">${x.dias_restantes}d</div>
-            <div class="revision-info">
-              <strong>${esc(x.etiqueta || '—')} — ${esc(x.usuario || '')}</strong>
-              <span>👤 ${esc(x.tecnico || '—')} · 📅 ${esc(x.proxima_revision)}</span>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>` : ''}
   `;
 }
 
